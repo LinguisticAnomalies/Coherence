@@ -36,8 +36,8 @@ from gensim.models import Word2Vec
 import gensim.models.keyedvectors as kv
 import spg.speechgraph.speechgraph as sg
 import networkx as nx
-import spacy
-nlp = spacy.load("en_core_web_sm")
+# import spacy
+# nlp = spacy.load("en_core_web_sm")
 
 #option is "naive", "stem" or "partial"
 def generategraph(textfile, option):
