@@ -617,11 +617,11 @@ def main():
         if arg == '-v':
             if index + 1 >= len(sys.argv):
                 print('Please specify vectors after -v. If not, the default fasttext vectors trained from common crawl without subword')
-                aggreFunc = np.min
+                vecs = 'fasttext_vectors.bin'
                 return
             elif str(sys.argv[index+1]).startswith('-'):
                 print('Please specify vectors after -v. If not, the default fasttext vectors trained from common crawl without subword')
-                aggreFunc = np.min
+                vecs = 'fasttext_vectors.bin'
                 return
             else:
                 vecs = str(sys.argv[index+1])
