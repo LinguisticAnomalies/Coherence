@@ -421,70 +421,113 @@ def gettermdict(option):
     else: 
         return {}
 
-def populatedf(df, term_dict, freq_dict, idf_dict, func):
+def populatedf(df, term_dict, freq_dict, idf_dict, func, sequence):
+    df = df.copy()
     N=sumdictvalues(freq_dict)
+
+    units = ['word', 'phrase', 'sent', 'sentidf']
+    methods = ['seq','mean','runningmean']
+    typeDict = {}
+    for u in units:
+        for m in methods:
+            item = u+m
+            typeDict[item] = 'object'
+            df[item] = np.nan
+    typeDict['wordgap'] = 'object'
+    df['wordgap'] = np.nan
+
+    if sequence:
+        df = df.astype(typeDict)
+
     for index, row in df.iterrows(): 
         wordc = wordcoherence(term_dict, row['text'])
         phrazc = phrasecoherence(term_dict, row['text'])
         sentc = sentcoherence(term_dict, row['text'])
         wordUnique = wordcoherenceUnique(term_dict, row['text'])
-        #gapc = gapcoherence(term_dict, row['text'])
         sentc_weighted = sentcoherenceweighted(term_dict, row['text'], idf_dict)
-        #sent_sif = sentcoherencesif(term_dict, row['text'], N)
-        
-        units = ['word', 'phrase', 'sent', 'sentidf']
-        methods = ['seq','mean','runningmean','gap']
         
         
-        try:
-            df.at[index, 'wordseq'] = func(wordc[0])
-            #df.at[index, 'wordsequnique'] = func(wordUnique[0])
-            df.at[index, 'wordmean'] = func(wordc[1])
-            #df.at[index, 'wordmeanunique']=func(wordUnique[1])
-            df.at[index, 'wordrunningmean'] = func(wordc[2])
-            #df.at[index, 'wordrunningmeanunique'] = func(wordUnique[2])
-            df.at[index, 'wordgap'] = func(wordc[3])
-        except ValueError:
-            df.at[index, 'wordseq'] = np.nan
-            df.at[index, 'wordmean'] = np.nan
-            #df.at[index, 'wordsequnique'] = np.nan
-            df.at[index, 'wordrunningmean'] = np.nan
-            df.at[index, 'wordgap'] = np.nan
+        if not sequence:
+        
+            try:
+                df.at[index, 'wordseq'] = func(wordc[0])
+                df.at[index, 'wordmean'] = func(wordc[1])
+                df.at[index, 'wordrunningmean'] = func(wordc[2])
+                df.at[index, 'wordgap'] = func(wordc[3])
+            except ValueError:
+                df.at[index, 'wordseq'] = np.nan
+                df.at[index, 'wordmean'] = np.nan
+                df.at[index, 'wordrunningmean'] = np.nan
+                df.at[index, 'wordgap'] = np.nan
 
-        try:        
-            df.at[index, 'phraseseq'] = func(phrazc[0])
-            df.at[index, 'phrasemean'] = func(phrazc[1])
-            df.at[index, 'phraserunningmean'] = func(phrazc[2])
-            #df.at[index, 'phrasegap'] = func(phrazc[3])
-        except ValueError:
-            df.at[index, 'phraseseq'] = np.nan
-            df.at[index, 'phrasemean'] = np.nan
-            df.at[index, 'phraserunningmean'] = np.nan
-            #df.at[index, 'phrasegap'] = np.nan
+            try:        
+                df.at[index, 'phraseseq'] = func(phrazc[0])
+                df.at[index, 'phrasemean'] = func(phrazc[1])
+                df.at[index, 'phraserunningmean'] = func(phrazc[2])
+            except ValueError:
+                df.at[index, 'phraseseq'] = np.nan
+                df.at[index, 'phrasemean'] = np.nan
+                df.at[index, 'phraserunningmean'] = np.nan
 
 
-        try:        
-            df.at[index, 'sentseq'] = func(sentc[0])
-            df.at[index, 'sentmean'] = func(sentc[1])
-            df.at[index, 'sentrunningmean'] = func(sentc[2])
-            #df.at[index, 'sentgap'] = func(sentc[3])
-        except ValueError: 
-            df.at[index, 'sentseq'] = np.nan
-            df.at[index, 'sentmean'] = np.nan
-            df.at[index, 'sentrunningmean'] = np.nan
-            #df.at[index, 'sentgap'] = np.nan
+            try:        
+                df.at[index, 'sentseq'] = func(sentc[0])
+                df.at[index, 'sentmean'] = func(sentc[1])
+                df.at[index, 'sentrunningmean'] = func(sentc[2])
+            except ValueError: 
+                df.at[index, 'sentseq'] = np.nan
+                df.at[index, 'sentmean'] = np.nan
+                df.at[index, 'sentrunningmean'] = np.nan
 
-        try:        
-            df.at[index, 'sentidfseq'] = func(sentc_weighted[0])
-            df.at[index, 'sentidfmean'] = func(sentc_weighted[1])
-            df.at[index, 'sentidfrunningmean'] = func(sentc_weighted[2])
-            #df.at[index, 'sentidfgap'] = func(sentc_weighted[3])
-        except ValueError: 
-            df.at[index, 'sentidfseq'] = np.nan
-            df.at[index, 'sentidfmean'] = np.nan
-            df.at[index, 'sentidfrunningmean'] = np.nan
-            #df.at[index, 'sentidfgap'] = np.nan
+            try:        
+                df.at[index, 'sentidfseq'] = func(sentc_weighted[0])
+                df.at[index, 'sentidfmean'] = func(sentc_weighted[1])
+                df.at[index, 'sentidfrunningmean'] = func(sentc_weighted[2])
+            except ValueError: 
+                df.at[index, 'sentidfseq'] = np.nan
+                df.at[index, 'sentidfmean'] = np.nan
+                df.at[index, 'sentidfrunningmean'] = np.nan
+        else:
+            try:
+                df.at[index, 'wordseq'] = wordc[0]
+                #print(df.at[index, 'wordseq'])
+                df.at[index, 'wordmean'] = wordc[1]
+                df.at[index, 'wordrunningmean'] = wordc[2]
+                df.at[index, 'wordgap'] = wordc[3]
+            except ValueError as err:
+                #print(err)
+                df.at[index, 'wordseq'] = []
+                df.at[index, 'wordmean'] = []
+                df.at[index, 'wordrunningmean'] = []
+                df.at[index, 'wordgap'] = []
 
+            try:        
+                df.at[index, 'phraseseq'] = phrazc[0]
+                df.at[index, 'phrasemean'] = phrazc[1]
+                df.at[index, 'phraserunningmean'] = phrazc[2]
+            except ValueError:
+                df.at[index, 'phraseseq'] = []
+                df.at[index, 'phrasemean'] = []
+                df.at[index, 'phraserunningmean'] = []
+
+
+            try:        
+                df.at[index, 'sentseq'] = sentc[0]
+                df.at[index, 'sentmean'] = sentc[1]
+                df.at[index, 'sentrunningmean'] = sentc[2]
+            except ValueError: 
+                df.at[index, 'sentseq'] = []
+                df.at[index, 'sentmean'] = []
+                df.at[index, 'sentrunningmean'] = []
+
+            try:        
+                df.at[index, 'sentidfseq'] = sentc_weighted[0]
+                df.at[index, 'sentidfmean'] = sentc_weighted[1]
+                df.at[index, 'sentidfrunningmean'] = sentc_weighted[2]
+            except ValueError: 
+                df.at[index, 'sentidfseq'] = []
+                df.at[index, 'sentidfmean'] = []
+                df.at[index, 'sentidfrunningmean'] = []
 
         filename = row['file']
         try:
@@ -527,11 +570,13 @@ def populatedf(df, term_dict, freq_dict, idf_dict, func):
     df['normal_diameter'] = normalize(df['diameter'])
     df['normal_asp'] = normalize(df['asp'])
 
+    return df
+    
+
 #'fasttext_vectors.bin', 'r5_basic_embeddingvectors.bin', 'lemmatizedwiki.model', 'nolemmawiki.model'
-def generatetable(vectorspace, df, freq_dict, idf_dict, func):
+def generatetable(vectorspace, df, freq_dict, idf_dict, func, sequence=False):
     term_dict = gettermdict(vectorspace)
-    newdf = df.copy()
-    populatedf(newdf, term_dict, freq_dict, idf_dict, func)
+    newdf = populatedf(df, term_dict, freq_dict, idf_dict, func, sequence)
     tocompare = [
     'wordseq',
     'wordmean',
@@ -547,8 +592,9 @@ def generatetable(vectorspace, df, freq_dict, idf_dict, func):
     'sentidfmean',
     'sentidfrunningmean'
     ]
-    for t in tocompare:
-        newdf[t] = normalize(newdf[t])
+    if not sequence:
+        for t in tocompare:
+            newdf[t] = normalize(newdf[t])
     return newdf
 
 def gettxts(directory):
@@ -572,6 +618,7 @@ def main():
         print("Using e.g. python3 coherence.py -p './data/directory'")
         return
     downloadpath = './coherenceresult.csv'
+    outputSequence = False
     for index, arg in enumerate(sys.argv):
         if arg == '-p':
             if index + 1 >= len(sys.argv):
@@ -625,7 +672,11 @@ def main():
                 return
             else:
                 vecs = str(sys.argv[index+1])
-    if '-f' not in sys.argv:
+    
+    if '-seq' in sys.argv:
+        outputSequence = True
+        aggreFunc = np.min
+    elif '-f' not in sys.argv:
         print('Aggregation function is set to default: minimum')
         aggreFunc = np.min
     if '-v' not in sys.argv:
@@ -644,7 +695,7 @@ def main():
     idf_dict = idf.set_index('token')['idf'].to_dict()
     freq_dict = idf.set_index('token')['frequency'].to_dict()
     #fastext = generatetable('crawl-300d-2M-subword.vec', textData, freq_dict, idf_dict)
-    fastext = generatetable(vecs, textData, freq_dict, idf_dict, aggreFunc)
+    fastext = generatetable(vecs, textData, freq_dict, idf_dict, aggreFunc, sequence=outputSequence)
     #fastext = fastext.dropna()
     print('Result preview:')
     print(fastext.head())
