@@ -645,22 +645,28 @@ def main():
         if arg == '-f':
             if index + 1 >= len(sys.argv):
                 print('Please specify min mean median max after -f. If not, the default aggregation function is min')
-                aggreFunc = np.min
+                aggreFunc = [np.min, np.mean, np.median, np.max, np.std, np.var]
                 return
             elif str(sys.argv[index+1]).startswith('-'):
                 print('Please specify min mean median max after -f. If not, the default aggregation function is min')
-                aggreFunc = np.min
+                aggreFunc = [np.min, np.mean, np.median, np.max, np.std, np.var]
                 return
             elif sys.argv[index+1] == 'min':
-                aggreFunc = np.min
+                aggreFunc = [np.min]
             elif sys.argv[index+1] == 'mean':
-                aggreFunc = np.mean
+                aggreFunc = [np.mean]
             elif sys.argv[index+1] == 'median':
-                aggreFunc = np.median
+                aggreFunc = [np.median]
             elif sys.argv[index+1] == 'max':
-                aggreFunc = np.max
+                aggreFunc = [np.max]
+            elif sys.argv[index+1] == 'std':
+                aggreFunc = [np.std]
+            elif sys.argv[index+1] == 'var':
+                aggreFunc = [np.var]
+            elif sys.argv[index+1] == 'all':
+                aggreFunc = [np.min, np.mean, np.median, np.max, np.std, np.var]
             else:
-                aggreFunc = np.min
+                aggreFunc = [np.min, np.mean, np.median, np.max, np.std, np.var]
         if arg == '-v':
             if index + 1 >= len(sys.argv):
                 print('Please specify vectors after -v. If not, the default fasttext vectors trained from common crawl without subword')
@@ -675,10 +681,10 @@ def main():
     
     if '-seq' in sys.argv:
         outputSequence = True
-        aggreFunc = np.min
+        aggreFunc = [np.min, np.mean, np.median, np.max, np.std, np.var]
     elif '-f' not in sys.argv:
-        print('Aggregation function is set to default: minimum')
-        aggreFunc = np.min
+        print('Aggregation function is set to default: all')
+        aggreFunc = [np.min, np.mean, np.median, np.max, np.std, np.var]
     if '-v' not in sys.argv:
         print('Vector is set to default: fasttext_vectors.bin')
         vecs = 'fasttext_vectors.bin'
@@ -694,9 +700,13 @@ def main():
     idf=pd.read_csv('./wikiidf_terms.csv')
     idf_dict = idf.set_index('token')['idf'].to_dict()
     freq_dict = idf.set_index('token')['frequency'].to_dict()
-    #fastext = generatetable('crawl-300d-2M-subword.vec', textData, freq_dict, idf_dict)
-    fastext = generatetable(vecs, textData, freq_dict, idf_dict, aggreFunc, sequence=outputSequence)
-    #fastext = fastext.dropna()
+    for i, func in enumerate(aggreFunc):
+        temp = generatetable(vecs, textData, freq_dict, idf_dict, func, sequence=outputSequence)
+        temp = temp.assign(aggregationMethod=func.__name__)
+        if i == 0:
+            fastext = temp
+        else:
+            fastext = pd.concat([fastext, temp], ignore_index=True)
     print('Result preview:')
     print(fastext.head())
     fastext.to_csv(downloadpath, index = None, header=True)
