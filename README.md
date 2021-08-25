@@ -27,7 +27,7 @@
 e.g. `python3 coherence.py -p './data_dir/' -s '~/coherenceresult.csv'`
 (Please also specify the filename in the end as the example shows)
 4. Use '-f' tag to specify aggregation function used to summarize the coherence of a document.
-The available options are 'min' 'mean' 'max' and 'median'. e.g. -f mean. Default is min. 
+The available options are 'min' 'mean' 'max' 'median' 'std' 'var' and 'all'. e.g. -f mean. Default is all. 
 5. Use '-v' tag to specify trained vectors. Default is fasttext_vectors.bin (the fasttext vectors trained on the common crawl).
 6. Use '-seq' tag to output the coherence scores as lists in the dataframe. These lists are the lists before the application of the aggregation function and can be used for other form of analysis. 
 ## 4. Interprete the results:
