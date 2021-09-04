@@ -11,7 +11,7 @@
    * bitarray: `conda install -c anaconda bitarray`
    * scipy: `conda install scipy`
    * pandas: `conda install pandas`
-   * nltk: `conda install nltk`(nltk.download('stopwords'))
+   * nltk: `conda install nltk` then `python -m nltk.downloader all`
    * textblob: `conda install -c conda-forge textblob`
    * scikitlearn: `conda install -c anaconda scikit-learn`
    * gensim: `conda install gensim`
