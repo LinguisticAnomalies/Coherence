@@ -20,7 +20,8 @@
    * numba: `conda install numba`
    * spacy: `conda install -c conda-forge spacy`
 ## 3. Run the python file:
-1. Execute file: `python3 coherence.py -p './data_dir/'`
+1. Get the data directory where all the txt files are located.
+2. Execute file: `python3 coherence.py -p './data_dir/'`
 (Please don't forget the '/' in the end)
 2. The result will be saved as coherenceresult.csv in current directory.
 3. If you want to save it to somewhere else, use -s directory.
