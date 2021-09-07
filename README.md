@@ -2,10 +2,11 @@
 1. Clone this directory.
 2. Download pre-trained vectors from https://drive.google.com/file/d/1PkJ0fpJ6MKdp3630c2mL_OxtT19ukukR/view?usp=sharing
 ## 2. Prepare conda environment:
-1. Create environment from file: `conda create --name coherence --file spec-file.txt python=3.7` then `python -m nltk.downloader all`
+1. Create environment from file: `conda create --name coherence --file spec-file.txt python=3.7`
 2. Activate environment: `conda activate coherence`
-3. Install semvecpy with pip: `pip install semvecpy`
-4. If step 1 did not work, these are the commands to install conda dependencies manually: 
+3. Install nltk packages: `python -m nltk.downloader all`
+4. Install semvecpy with pip: `pip install semvecpy`
+5. If step 1 did not work, these are the commands to install conda dependencies manually: 
    * numpy: `conda install numpy`
    * bitarray: `conda install -c anaconda bitarray`
    * scipy: `conda install scipy`
