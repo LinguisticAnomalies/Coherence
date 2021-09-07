@@ -3,13 +3,13 @@
 
 import sys
 import warnings
-sys.path.append('./semvecpy/semvecpy/vectors')
-sys.path.append('./semvecpy/semvecpy')
+# sys.path.append('./semvecpy/semvecpy/vectors')
+# sys.path.append('./semvecpy/semvecpy')
 sys.path.append('./spg')
 import os
 import io
-import semvec_utils as sv
-import vectors.real_vectors as rv
+from semvecpy.vectors import semvec_utils as sv
+from semvecpy.vectors import real_vectors as rv
 from platform import python_version
 print("python version: " + str(python_version()))
 from os import listdir
