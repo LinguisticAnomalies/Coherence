@@ -1,12 +1,11 @@
 ## 1. File preparation:
 1. Clone this directory.
-2. Download pre-trained vectors from https://fasttext.cc/docs/en/english-vectors.html
-3. Download IDF data file from https://drive.google.com/file/d/1Xw2wyx6P8yit--FxB7a2NwmFXLPxJaIT/view?usp=sharing
-4. Download semvecpy package to load semantic vectors. `git clone https://github.com/semanticvectors/semvecpy.git`
+2. Download pre-trained vectors from https://drive.google.com/file/d/1PkJ0fpJ6MKdp3630c2mL_OxtT19ukukR/view?usp=sharing
 ## 2. Prepare conda environment:
-1. Create environment: `conda create -n coherence python=3.7`
+1. Create environment from file: `conda create --name coherence --file spec-file.txt python=3.7` then `python -m nltk.downloader all`
 2. Activate environment: `conda activate coherence`
-3. Install dependencies: 
+3. Install semvecpy with pip: `pip install semvecpy`
+4. If step 1 did not work, these are the commands to install conda dependencies manually: 
    * numpy: `conda install numpy`
    * bitarray: `conda install -c anaconda bitarray`
    * scipy: `conda install scipy`
