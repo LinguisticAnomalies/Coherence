@@ -55,6 +55,11 @@ the column names you get from the csv.</p>
       * weighted = the vectors in each word of the sentence are weighted by inverse document frequency (IDF)
       * sif = the sentence vectors are calculated using smooth inverse frequency (SIF) (The numbers may not look right for these
       ones because I just added this measure and I need to make sure I have the calculations right.
+      
+      ![image](https://user-images.githubusercontent.com/11478666/133835799-362785d7-7fc4-43a5-a7f1-3f91eaaff148.png)
+
+      
+      
 2. Graph based measures.
    <p>These measures are based on putting the words on a graph data structure and analyze the property of the graph. 
    These measures should all start with 'normal' as I normalized them to a number between 0-1 so it can be compared to previous
