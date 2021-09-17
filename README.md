@@ -1,6 +1,7 @@
 ## 1. File preparation:
 1. Clone this directory.
 2. Download pre-trained vectors from https://drive.google.com/file/d/1PkJ0fpJ6MKdp3630c2mL_OxtT19ukukR/view?usp=sharing
+3. Download inverse document frequency trained from wikipedia: https://drive.google.com/file/d/1Xw2wyx6P8yit--FxB7a2NwmFXLPxJaIT/view?usp=sharing
 ## 2. Prepare conda environment:
 1. Create environment from file: `conda create --name coherence --file spec-file.txt python=3.7`
 2. Activate environment: `conda activate coherence`
