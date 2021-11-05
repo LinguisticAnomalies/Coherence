@@ -398,11 +398,10 @@ def load_vectors(fname):
 
 def gettermdict(option):
     if option.endswith('.bin'):
-        termvectors=sv.readfile(option)
         termstore = rv.RealVectorStore()
-        termstore.init_from_lists(termvectors[0],termvectors[1])
+        termstore.init_from_file(option)
         termstore.normalize_all()
-        term_dict=dict(zip(termvectors[0],termvectors[1]))
+        term_dict=dict(zip(termstore.terms,termstore.vectors))
         return term_dict
     elif option.endswith('.model'):
         model_skipgram_loaded = Word2Vec.load(option)
