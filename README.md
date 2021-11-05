@@ -32,7 +32,7 @@ e.g. `python3 coherence.py -p './data_dir/' -s '~/coherenceresult.csv'`
 The available options are 'min' 'mean' 'max' 'median' 'std' 'var' and 'all'. e.g. -f mean. Default is all. 
 5. Use '-v' tag to specify trained vectors. Default is fasttext_vectors.bin (the fasttext vectors trained on the common crawl).
 6. Use '-seq' tag to output the coherence scores as lists in the dataframe. These lists are the lists before the application of the aggregation function and can be used for other form of analysis. 
-## 4. Interprete the results:
+## 4. Interpret the results:
 <p>This csv results contains several metrics of the coherence of the input text files. Some of them are based on 
 word embedding vectors and some of them are based on graph analysis. Below is a short description of the meaning of 
 the column names you get from the csv.</p>
