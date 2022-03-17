@@ -1,3 +1,11 @@
+## Comprehensive Coherence Calculator
+
+This site provides code used to estimate a range of coherence metrics, including sequential (e.g. sentence to subsequent sentence) and global (e.g. sentence to all other sentences) metrics. For further details on the metrics concerned, please see:
+
+Xu W, Wang W, Portanova J, Chander A, Campbell A, Pakhomov S, Ben-Zeev D, Cohen T. Fully Automated Detection of Formal Thought Disorder with Time-series Augmented Representations for Detection of Incoherent Speech (TARDIS). Journal of Biomedical Informatics. 2022 Jan 19:103998.
+
+Xu W, Portanova J, Chander A, Ben-Zeev D, Cohen T. The Centroid Cannot Hold: Comparing Sequential and Global Estimates of Coherence as Indicators of Formal Thought Disorder. InAMIA Annual Symposium Proceedings 2020 (Vol. 2020, p. 1315). American Medical Informatics Association.
+
 ## 1. File preparation:
 1. Clone this directory.
 2. Download pre-trained vectors from https://drive.google.com/file/d/1PkJ0fpJ6MKdp3630c2mL_OxtT19ukukR/view?usp=sharing
