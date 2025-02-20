@@ -1,0 +1,6 @@
+# Include LICENSE and README
+include LICENSE.txt
+include README.md
+include requirements.txt
+recursive-include src/coherencecalculator/models *
+recursive-include src/coherencecalculator/vecs *
