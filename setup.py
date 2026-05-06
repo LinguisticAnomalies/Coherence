@@ -5,7 +5,7 @@ with open('requirements.txt') as fh:
 
 setup(
     name='coherencecalculator',
-    version='0.1.26pip',
+    version='1.0.0',
     author='WeizheXu',
     author_email='xuweizhe@uw.edu',
     packages=['coherencecalculator', 'coherencecalculator.pipelines', 'coherencecalculator.tools', 'coherencecalculator.diffcse'],
@@ -17,7 +17,7 @@ setup(
     # scripts=['src/scripts'],
     url='http://pypi.python.org/pypi/PackageName/',
     license='LICENSE.txt',
-    description='An awesome package that does something',
+    description='Calculate coherence scores of speech.',
     long_description=open('README.md').read(),
     install_requires=requirements,
     include_package_data=True

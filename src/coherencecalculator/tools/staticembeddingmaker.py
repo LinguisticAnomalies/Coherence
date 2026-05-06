@@ -6,9 +6,6 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.tokenize import sent_tokenize
 
-import spacy
-nlp = spacy.load("en_core_web_sm")
-
 import numpy as np
 import pandas as pd
 
@@ -20,6 +17,7 @@ class StaticEmbeddingMaker(EmbeddingMaker):
         self.term_dict = vecLoader.term_dict
         self.idfDict = vecLoader.idfDict
         self.pbar = pbar
+        self.nlp = vecLoader.nlp
     
     def __wordCoherence(self, incomingdata) -> list:
         stop_words = set(stopwords.words('english')) 
@@ -37,7 +35,7 @@ class StaticEmbeddingMaker(EmbeddingMaker):
     
     def __phraseCoherence(self, incomingdata) -> list:
         
-        doc = nlp(incomingdata)
+        doc = self.nlp(incomingdata)
         phrases = []
         for chunk in doc.noun_chunks:
             phrases.append(chunk.text)

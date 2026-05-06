@@ -24,8 +24,24 @@ def dropEmptyTs(df:pd.DataFrame, columns:list) -> pd.DataFrame:
     out = df.drop(index=toDrop)
     return out.reset_index(drop=True)
 
-def aggDfCols(df:pd.DataFrame, columns:list, func=np.min) -> pd.DataFrame:
+def countEmptyTs(df:pd.DataFrame, columns:list) -> pd.DataFrame:
+    toDrop = []
+
+    for i, row in df.iterrows():
+        for col in columns:
+            if len(row[col]) == 0:
+                toDrop.append(i)
+                break
+    
+    return len(toDrop)
+
+def aggDfCols(df:pd.DataFrame, func_map:dict) -> pd.DataFrame:
     result = df.copy()
-    for col in columns:
-        result[col] = result[col].apply(func)
+    for col, func in func_map.items():
+        if col in result.columns:
+            for i, row in result.iterrows():
+                if len(row[col]) > 0:
+                    result.at[i, col] = func(row[col])
+                else:
+                    result.at[i, col] = np.nan
     return result

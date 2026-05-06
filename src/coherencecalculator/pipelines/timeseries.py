@@ -11,6 +11,10 @@ from coherencecalculator.tools.sbertembeddingmaker import SBertEmbeddingMaker
 from coherencecalculator.tools.cosinegenerator import CosineGenerator
 import coherencecalculator.tools.utils as utils
 from coherencecalculator.tools.vecloader import VecLoader
+from coherencecalculator.tools.ppl import PerplexityGenerator
+from coherencecalculator.tools.speechgraph import SpeechGraph
+
+
 
 import numpy as np
 import pandas as pd
@@ -19,7 +23,9 @@ from tqdm.auto import tqdm
 
 import warnings
 
-def timeseries(vecLoader:VecLoader, inputText=None, inputDir=None, inputCsv=None, inputPickle=None, inputDf=None, fileCol=None, textCol=None, vecType=None, saveDir=None, embeddingFunc=None) -> pd.DataFrame:
+from nltk.tokenize import sent_tokenize
+
+def timeseries(vecLoader:VecLoader, inputText=None, inputDir=None, inputCsv=None, inputPickle=None, inputDf=None, fileCol=None, textCol=None, vecType=None, saveDir=None, embeddingFunc=None, window_size=64, window_batch_size=16) -> pd.DataFrame:
     #read in data
     print('Loading data...')
     dc = DataCreator()
@@ -83,13 +89,44 @@ def timeseries(vecLoader:VecLoader, inputText=None, inputDir=None, inputCsv=None
         warnings.simplefilter("ignore") 
         cg = CosineGenerator(data=embeddings, columns=allMethods, pbar=pbar2)
         cosineDf = cg.generateCosine()
-    allTsCols = [col for col in cosineDf.columns if col not in ['file', 'text', 'label']]
-    cosineDf = utils.dropEmptyTs(cosineDf, allTsCols)
-    numDropped = len(data) - len(cosineDf)
     pbar2.close()
+    
+
+    # add ppl columns
+    pg = PerplexityGenerator(vecLoader=vecLoader)
+    cosineDf['avg_ppl'] = cosineDf['sliding_window'] = cosineDf['sliding_window_batch'] = cosineDf['contextmodel'] = cosineDf['topicmodel'] = None
+    pbar3 = tqdm(total=len(cosineDf))
+    with utils.suppress_stdout():
+        for i, row in cosineDf.iterrows():
+            text = row['text']
+            if type(text) == list:
+                freetext = ' '.join(text)
+                sentences = text
+            else:
+                freetext = text
+                sentences = sent_tokenize(text)
+            avg_ppl, slide_wd_ppl = pg.sliding_window_perplexity(freetext, window_size=window_size, window_batch_size=1)
+            avg_ppl, slide_wd_ppl_batch = pg.sliding_window_perplexity(freetext, window_size=window_size, window_batch_size=window_batch_size)
+            contextmodel, topicmodel = pg.sentence_level_perplexity(sentences)
+            cosineDf.at[i, 'avg_ppl'] = [avg_ppl]
+            cosineDf.at[i, 'sliding_window'] = slide_wd_ppl
+            cosineDf.at[i, 'sliding_window_batch'] = slide_wd_ppl_batch
+            cosineDf.at[i, 'contextmodel'] = contextmodel
+            cosineDf.at[i, 'topicmodel'] = topicmodel
+            pbar3.update(1)
+    pbar3.close()
+    
+    # add speechgraph columns
+    sg = SpeechGraph(vecLoader=vecLoader)
+    cosineDf = sg.add_speechgraph_features(cosineDf)
+    
+    
+    allTsCols = [col for col in cosineDf.columns if col not in ['file', 'text', 'label']]
+    numDropped = utils.countEmptyTs(cosineDf, allTsCols)
+    
     print('Cosine values created.')
     if numDropped > 0:
-        print(f'{numDropped} file(s) are dropped because they are not long enough to produce any cosine values.')
+        print(f'{numDropped} file(s) contain empty timeseries on at least one metric because they are not long enough to produce any cosine values.')
     if saveDir is not None:
         cosineDf.to_pickle(saveDir)
         print(f'Results saved as {saveDir}.')

@@ -7,8 +7,6 @@ from coherencecalculator.tools.vecloader import VecLoader
 from nltk.corpus import stopwords 
 from nltk.tokenize import sent_tokenize
 
-import spacy
-nlp = spacy.load("en_core_web_sm")
 
 import numpy as np
 import pandas as pd
@@ -27,6 +25,8 @@ class BertEmbeddingMaker(EmbeddingMaker):
 
         self.tokenizer = vecLoader.bertTokenizer
         self.pbar = pbar
+        
+        self.nlp = vecLoader.nlp
     
     def __generateEmbeddingDict(self, text, word=False):
         marked_text = "[CLS] " + text + " [SEP]"
@@ -88,7 +88,7 @@ class BertEmbeddingMaker(EmbeddingMaker):
         embeddingList = []
         for sent in sentences:
             vectorDict = self.__generateEmbeddingDict(sent, word=True)
-            doc = nlp(sent)
+            doc = self.nlp(sent)
             phrases = []
             for chunk in doc.noun_chunks:
                 phrases.append(chunk.text)

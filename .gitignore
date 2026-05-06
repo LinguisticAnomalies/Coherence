@@ -1,0 +1,87 @@
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# ─── Virtual environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+ENV/
+env/
+
+# ─── IDE ──────────────────────────────────────────────────────────────────────
+.vscode/launch.json          # keep settings.json + extensions.json, not launch
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ─── Testing / linting ────────────────────────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# ─── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+# NOTE: nbstripout pre-commit hook strips outputs, but outputs are still ignored here
+# for repos not using pre-commit
+
+# ─── ML / AI artifacts ────────────────────────────────────────────────────────
+# Model weights — use DVC, HuggingFace Hub, or GCS instead
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.bin
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+models/*
+
+# HuggingFace cache (don't commit downloaded model weights)
+.cache/huggingface/
+~/.cache/huggingface/
+
+# ─── Secrets / credentials ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example            # keep the example template
+*.pem
+*.key
+secrets/
+credentials.json
+
+# Detect-secrets baseline (keep this to avoid accidental secret commits)
+# .secrets.baseline      # <- uncomment to track this
+
+# ─── Logs / outputs ───────────────────────────────────────────────────────────
+logs/
+*.log
+outputs/
+runs/                    # TensorBoard runs
+wandb/                   # W&B runs
+mlruns/                  # MLflow runs
+lightning_logs/
+
+# ─── Docs build ───────────────────────────────────────────────────────────────
+docs/_build/
+site/
+
+# Specific
+src/coherencecalculator/models/*
+src/coherencecalculator/vecs/*
+tests/*

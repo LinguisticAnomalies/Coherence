@@ -7,13 +7,15 @@ import numpy as np
 from coherencecalculator.diffcse import DiffCSE
 from sentence_transformers import SentenceTransformer
 from simcse import SimCSE
-from transformers import BertTokenizer, BertModel
+from transformers import BertTokenizer, BertModel, AutoTokenizer, AutoModelForCausalLM, pipeline
+import spacy
 
 
 DATAPATH = pkg_resources.resource_filename('coherencecalculator', 'vecs/')
 VECSOURCE = 'fasttext'
 VECFILE = DATAPATH + 'fasttext_vectors.bin'
 IDFFILE = DATAPATH + 'wikiidf_terms.csv'
+MODELCARD = "EleutherAI/pythia-1.4b-deduped"
 
 class VecLoader(object):
     def __init__(self, vecType='fasttext', preTrained=VECFILE, idfData=IDFFILE, useCuda=True, device='cuda:0'):
@@ -22,13 +24,17 @@ class VecLoader(object):
             self.__loadFastText(preTrained)
         elif vecType == 'gensim':
             self.__loadGensim(preTrained)
-
+        
+        self.nlp = spacy.load("en_core_web_sm")
         self.__loadIdf(idfData)
 
         self.bertModel = BertModel.from_pretrained('bert-base-uncased', output_hidden_states = True)
         self.bertTokenizer = BertTokenizer.from_pretrained("bert-base-uncased") 
         self.useCuda = useCuda
         self.device = device
+        
+        self.llm, self.llm_tokenizer = self.__loadLlm(MODELCARD, device=self.device)
+        self.summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=self.device)
 
         if useCuda:
             self.sentBert = SentenceTransformer('all-MiniLM-L6-v2', device=device)
@@ -59,3 +65,17 @@ class VecLoader(object):
     def __loadIdf(self, idfData) -> None:
         idfDf = pd.read_csv(idfData)
         self.idfDict = idfDf.set_index('token')['idf'].to_dict()
+        
+    def __loadLlm(self, model_card, device):
+        """Setup the model and tokenizer."""
+        tokenizer = AutoTokenizer.from_pretrained(model_card)
+        model = AutoModelForCausalLM.from_pretrained(model_card)
+        
+        # Handle special tokens if not set
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        
+        model = model.to(device)
+        model.eval()
+        
+        return model, tokenizer
