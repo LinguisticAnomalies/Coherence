@@ -15,7 +15,7 @@ conda activate envname
 ```
 2. Install the package with pip
 ```
-pip install https://github.com/WeizheXu/coherencepip/releases/download/v0.2.0/coherencecalculator-0.2.0-py3-none-any.whl --no-cache-dir
+pip install https://github.com/WeizheXu/coherencepip/releases/download/v1.0.0/coherencecalculator-1.0.0-py3-none-any.whl --no-cache-dir
 ```
 or if you don't have Nvidia GPU, you can use the no cuda version that only uses Word2Vec-like embeddings.
 ```
