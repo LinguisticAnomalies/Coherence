@@ -111,3 +111,14 @@ tardisResult = tardis(vecLoader=vecs, inputFeatures=featureDictTest, modelFile='
 For tardisResults: higher scores = more incoherent (possible scores: 0-4) These are produced by ML models trained on the TALD scale. 
 
 For aggResults: higher scores = more coherent (possible scoeres: -1-1) These are cosine similarities acquired from embeddings. 
+
+## Docker
+### Prerequisites
+- Docker installed on your system
+- For GPU support: NVIDIA Docker runtime installed
+
+### Quick Start
+```bash
+docker build -t ccc .
+docker run --gpus all -p 8000:80 --name ccc ccc
+```
