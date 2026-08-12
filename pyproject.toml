@@ -16,6 +16,7 @@ dependencies = [
     "en-core-web-sm",
     "fastapi[standard]>=0.141.1",
     "gensim>=4.4.0",
+    "huggingface-hub>=0.36.2",
     "importlib-metadata>=9.0.0",
     "nltk>=3.10.2",
     "numba-cuda>=0.30.4",
@@ -29,7 +30,7 @@ dependencies = [
     "torchaudio>=2.11.0",
     "torchvision>=0.26.0",
     "transformers==4.47.0",
-    "tsfresh==0.20.3",
+    "tsfresh>=0.21.2",
 ]
 
 [tool.setuptools]
@@ -42,15 +43,6 @@ packages = [
     "coherencecalculator.simcse",
     "coherencecalculator.tools",
 ]
-
-[tool.setuptools.package-data]
-coherencecalculator = [
-    "models/*.pickle",
-    "vecs/*.bin",
-    "vecs/*.csv",
-]
-[tool.uv]
-environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
 
 [[tool.uv.index]]
 name = "pytorch-cu128"
