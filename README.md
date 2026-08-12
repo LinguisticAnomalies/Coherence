@@ -8,6 +8,28 @@ Xu W, Portanova J, Chander A, Ben-Zeev D, Cohen T. The Centroid Cannot Hold: Com
 ## Installation
 Note: Updated to support CUDA > 12.0 and Python > 3.12
 
+### Option A — with uv (recommended)
+[uv](https://docs.astral.sh/uv/) is a fast Python package and environment manager. It reads `pyproject.toml` / `uv.lock` and installs exactly the pinned dependencies, including the required Python 3.12.7 (from `.python-version`).
+
+1. Install uv:
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# or: pip install uv
+```
+2. Sync the environment (creates a `.venv` and installs all dependencies):
+```bash
+uv sync
+```
+3. Activate it:
+```bash
+source .venv/bin/activate
+```
+4. It's ready to use, e.g. `python tests/tests.py`. To add a new dependency:
+```bash
+uv add <package>
+```
+
+### Option B — with conda and pip
 1. Create new conda environment with python version 3.12.7
 ```
 conda create -n envname python=3.12.7
