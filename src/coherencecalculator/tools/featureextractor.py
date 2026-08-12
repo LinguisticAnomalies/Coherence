@@ -51,6 +51,21 @@ class FeatureExtractor(object):
             'value_count',
             'range_count']
     
+        timeseries['cos'] = timeseries['cos'].astype(np.float64)
+
+        def _is_degenerate(s: pd.Series) -> bool:
+            mn, mx = np.min(s), np.max(s)
+            if np.isnan(mn) or np.isnan(mx):
+                return False
+            return mx == mn or (mx - mn) <= 1e-12 * max(1.0, abs(mn), abs(mx))
+
+        const_mask = timeseries.groupby('id')['cos'].transform(
+            _is_degenerate).astype(bool)
+        n_const = int(const_mask.sum())
+        if n_const:
+            timeseries.loc[const_mask, 'cos'] += np.random.normal(
+                0, 1e-6, size=n_const)
+
         settings = ComprehensiveFCParameters()
         [settings.pop(key) for key in rmlist]
         features = extract_features(timeseries, column_id = 'id', column_sort='time', default_fc_parameters=settings, disable_progressbar=True)
