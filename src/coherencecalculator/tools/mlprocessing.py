@@ -32,7 +32,9 @@ class MLProcessing(object):
             return model.predict_proba(x_test)[:,1]
     
     def generatePrediction(self, featureDict:dict) -> pd.DataFrame:
-        methodCols = list(featureDict.keys())
+        modelKeys = set(self.allModels)
+        methodCols = [col for col in featureDict
+                      if col in modelKeys and col in self.allScalers]
 
         for i, col in enumerate(tqdm(methodCols)):
             # keep a copy of the original data by dropping the feature columns
