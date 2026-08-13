@@ -5,8 +5,8 @@ from coherencecalculator.tools.mlprocessing import MLProcessing
 import coherencecalculator.tools.utils as utils
 from coherencecalculator.tools.vecloader import VecLoader
 
-import pkg_resources
 import pandas as pd
+from coherencecalculator.tools.assets import MODEL, SCALER, get_asset
 def tardis(vecLoader:VecLoader, inputFeatures=None, inputText=None, inputDir=None, inputCsv=None, inputPickle=None, inputDf=None, fileCol=None, textCol=None, vecType=None, saveDir=None) -> pd.DataFrame:
     if inputFeatures is None:
         cosineDf = timeseries(vecLoader, inputText=inputText, inputDir=inputDir, inputCsv=inputCsv, inputPickle=inputPickle, inputDf=inputDf, fileCol=fileCol, textCol=textCol, vecType=vecType, saveDir=None)
@@ -15,11 +15,8 @@ def tardis(vecLoader:VecLoader, inputFeatures=None, inputText=None, inputDir=Non
         featureDict = inputFeatures
     #features --> coherence scores
     print('Finalizing coherence scores...')
-    DATAPATH = pkg_resources.resource_filename('coherencecalculator', 'models/')
-    MODEL = DATAPATH + 'model_original.pickle'
-    SCALER = DATAPATH + 'scaler_original.pickle'
     with utils.suppress_stdout():
-        ml = MLProcessing(modelFile=MODEL, scalerFile=SCALER)
+        ml = MLProcessing(modelFile=get_asset(MODEL), scalerFile=get_asset(SCALER))
         result = ml.generatePrediction(featureDict)
     if saveDir is not None:
         result.to_pickle(saveDir)

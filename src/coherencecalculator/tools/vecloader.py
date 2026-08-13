@@ -1,25 +1,26 @@
 
-import pkg_resources
 from semvecpy.vectors import real_vectors as rv
 import gensim.downloader
 import pandas as pd
 import numpy as np
 from coherencecalculator.diffcse import DiffCSE
+from coherencecalculator.tools.assets import IDFFILE, VECFILE, get_asset
 from sentence_transformers import SentenceTransformer
 from simcse import SimCSE
 from transformers import BertTokenizer, BertModel, AutoTokenizer, AutoModelForCausalLM, pipeline
 import spacy
 
 
-DATAPATH = pkg_resources.resource_filename('coherencecalculator', 'vecs/')
 VECSOURCE = 'fasttext'
-VECFILE = DATAPATH + 'fasttext_vectors.bin'
-IDFFILE = DATAPATH + 'wikiidf_terms.csv'
 MODELCARD = "EleutherAI/pythia-1.4b-deduped"
 
 class VecLoader(object):
-    def __init__(self, vecType='fasttext', preTrained=VECFILE, idfData=IDFFILE, useCuda=True, device='cuda:0'):
+    def __init__(self, vecType='fasttext', preTrained=None, idfData=None, useCuda=True, device='cuda:0'):
         print('Loading vectors...')
+        if preTrained is None:
+            preTrained = get_asset(VECFILE)
+        if idfData is None:
+            idfData = get_asset(IDFFILE)
         if vecType == 'fasttext':
             self.__loadFastText(preTrained)
         elif vecType == 'gensim':
