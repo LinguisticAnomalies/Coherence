@@ -1,5 +1,5 @@
 FROM ghcr.io/astral-sh/uv:0.10.4 AS uvbin
-FROM nvidia/cuda:12.8.2-devel-ubuntu24.04 AS builder-gpu
+FROM nvidia/cuda:12.8.2-runtime-ubuntu24.04 AS builder-gpu
 
 # Install uv.
 COPY --from=uvbin /uv /uvx /bin/
@@ -10,6 +10,9 @@ RUN apt-get update && \
   ffmpeg \
   git &&\
   rm -rf /var/lib/apt/lists/*
+
+ARG GIT_SHA=unknown
+ENV GIT_SHA=$GIT_SHA
 
 # Copy the application into the container.
 COPY . /app

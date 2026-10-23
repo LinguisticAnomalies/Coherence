@@ -40,6 +40,7 @@ from pydantic import BaseModel, Field
 from coherencecalculator.pipelines.timeseries import timeseries
 from coherencecalculator.pipelines.agg import agg
 from coherencecalculator.tools.vecloader import VecLoader
+from coherencecalculator import version
 
 import torch
 
@@ -280,7 +281,7 @@ async def infer(request: Request) -> JSONResponse:
             agg_df = agg_df.drop(columns=[col])
     agg_df = agg_df.replace([np.nan, np.inf, -np.inf], None)
     rows = _df_to_response_rows(agg_df, filename_col="filename")
-    return JSONResponse({"n": len(rows), "rows": rows})
+    return JSONResponse({"n": len(rows), "rows": rows, "system_fingerprint": version.SYSTEM_FINGERPRINT})
 
 
 # Optional: a root route
